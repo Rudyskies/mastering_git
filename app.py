@@ -4,9 +4,19 @@ import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import random
 
+print(f"""
+Menambah perubahan print di file app.py
+""")
+
+
+
 st.set_page_config(page_title="Dashboard Penjualan", layout="wide")
 
 st.title("📊 Dashboard Penjualan Toko Online")
+
+st.sidebar.header("📁 Upload Data")
+uploaded_file = st.sidebar.file_uploader("Unggah file CSV penjualan", type=["csv"])
+
 
 # --- Data Produk ---
 produk_data = {
@@ -31,7 +41,16 @@ def generate_penjualan():
             id_transaksi += 1
     return pd.DataFrame(penjualan, columns=['id_transaksi', 'id_produk', 'jumlah', 'tanggal'])
 
-penjualan_df = generate_penjualan()
+# penjualan_df = generate_penjualan()
+if uploaded_file:
+    penjualan_df = pd.read_csv(uploaded_file)
+    st.success("✅ File berhasil dimuat!")
+else:
+    st.info("Belum ada file diupload, menggunakan data dummy...")
+    penjualan_df = generate_penjualan()
+
+
+
 
 # --- Gabungkan Data ---
 gabung_df = penjualan_df.merge(produk_df, on='id_produk')
